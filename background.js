@@ -1,16 +1,7 @@
 
-// background.js — adds hotkey toggle and routes streaming for inline panels
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.contextMenus.create({
-    id: "ask-gpt",
-    title: 'Ask Jberry-GPT about: "%s"',
-    contexts: ["selection"]
-  });
-  chrome.contextMenus.create({
-    id: "ask-gpt-inline",
-    title: 'Ask in Jberry-GPT sidebar',
-    contexts: ["selection", "page"]
-  });
+  chrome.contextMenus.create({ id: "ask-gpt", title: 'Ask Jberry-GPT about: "%s"', contexts: ["selection"] });
+  chrome.contextMenus.create({ id: "ask-gpt-inline", title: "Ask in Jberry-GPT sidebar", contexts: ["selection","page"] });
 });
 
 async function getApiKey() {
@@ -18,7 +9,6 @@ async function getApiKey() {
   if (!OPENAI_API_KEY) throw new Error("No API key set. Open Options to add your API key.");
   return OPENAI_API_KEY;
 }
-
 async function askOnce(prompt, model = "gpt-5.1-mini", system = "You are a helpful assistant.") {
   const key = await getApiKey();
   const r = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -30,19 +20,17 @@ async function askOnce(prompt, model = "gpt-5.1-mini", system = "You are a helpf
   if (data.error) throw new Error(data.error.message || "OpenAI error");
   return data.choices?.[0]?.message?.content || "No answer.";
 }
-
-function streamToPort(port, { model, system, messages }) {
-  // Calls chat completions stream and forwards content deltas
+function streamToPort(port, { model, messages }) {
   (async () => {
     let key;
-    try { key = await getApiKey(); } catch (e) { port.postMessage({ type: "error", message: e.message }); return; }
+    try { key = await getApiKey(); } catch (e) { port.postMessage({ type:"error", message: e.message }); return; }
     try {
       const res = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
         headers: { "Authorization": `Bearer ${key}`, "Content-Type": "application/json" },
         body: JSON.stringify({ model: model || "gpt-5.1-mini", messages, stream: true })
       });
-      if (!res.ok || !res.body) { port.postMessage({ type: "error", message: "HTTP " + res.status }); return; }
+      if (!res.ok || !res.body) { port.postMessage({ type:"error", message: "HTTP " + res.status }); return; }
       const reader = res.body.getReader();
       const decoder = new TextDecoder("utf-8");
       let done = false, buffer = "";
@@ -68,12 +56,11 @@ function streamToPort(port, { model, system, messages }) {
       }
       port.postMessage({ type:"done" });
     } catch (err) {
-      port.postMessage({ type: "error", message: err.message || String(err) });
+      port.postMessage({ type:"error", message: err.message || String(err) });
     }
   })();
 }
 
-// Context menu non-streaming quick box
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === "ask-gpt") {
     try {
@@ -86,11 +73,9 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
             box = document.createElement("div");
             box.id = "jb-gpt-box";
             Object.assign(box.style, {
-              position: "fixed", top: "12px", right: "12px",
-              width: "380px", maxHeight: "72vh", overflow: "auto",
-              background: "white", border: "1px solid #e5e7eb",
-              borderRadius: "12px", padding: "12px", boxShadow: "0 10px 30px rgba(0,0,0,.2)",
-              fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif",
+              position: "fixed", top: "12px", right: "12px", width: "380px", maxHeight: "72vh", overflow: "auto",
+              background: "white", border: "1px solid #e5e7eb", borderRadius: "12px", padding: "12px",
+              boxShadow: "0 10px 30px rgba(0,0,0,.2)", fontFamily: "system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif",
               fontSize: "14px", lineHeight: "1.5", zIndex: 2147483647
             });
             const bar = document.createElement("div");
@@ -115,7 +100,6 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   }
 });
 
-// Hotkey toggle
 chrome.commands.onCommand.addListener(async (command, tab) => {
   if (command === "toggle_inline_panel") {
     if (!tab || !tab.id) {
@@ -127,29 +111,14 @@ chrome.commands.onCommand.addListener(async (command, tab) => {
   }
 });
 
-// Ports from popup and content script
 chrome.runtime.onConnect.addListener((port) => {
-  if (port.name === "gpt") {
-    // From popup
-    port.onMessage.addListener((msg) => {
-      if (msg.type !== "ask") return;
-      const { prompt, model, system, history } = msg;
-      const messages = [];
-      if (system) messages.push({ role:"system", content: system });
-      if (Array.isArray(history)) messages.push(...history);
-      messages.push({ role:"user", content: prompt });
-      streamToPort(port, { model, system, messages });
-    });
-  } else if (port.name === "gpt-inline") {
-    // From content script inline panel
-    port.onMessage.addListener((msg) => {
-      if (msg.type !== "ask") return;
-      const { prompt, model, system, history } = msg;
-      const messages = [];
-      if (system) messages.push({ role:"system", content: system });
-      if (Array.isArray(history)) messages.push(...history);
-      messages.push({ role:"user", content: prompt });
-      streamToPort(port, { model, system, messages });
-    });
-  }
+  port.onMessage.addListener((msg) => {
+    if (msg.type !== "ask") return;
+    const { prompt, model, system, history } = msg;
+    const messages = [];
+    if (system) messages.push({ role:"system", content: system });
+    if (Array.isArray(history)) messages.push(...history);
+    messages.push({ role:"user", content: prompt });
+    streamToPort(port, { model, messages });
+  });
 });

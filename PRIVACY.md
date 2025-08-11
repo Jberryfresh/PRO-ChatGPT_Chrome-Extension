@@ -3,7 +3,7 @@
 
 **Last updated:** 2025‑08‑11
 
-Jberry GPT Sidebar runs locally in your browser. It does not use third‑party analytics or tracking and does not sell personal data.
+PRO ChatGPT Chrome Extension runs locally in your browser. It does not use third‑party analytics or tracking and does not sell personal data.
 
 ## Data We Store
 - **OpenAI API key** — stored via Chrome's `storage.sync` so you can use the extension on your signed‑in Chrome profiles.
