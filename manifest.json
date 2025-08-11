@@ -2,13 +2,16 @@
   "manifest_version": 3,
   "name": "PRO ChatGPT Chrome Extension",
   "version": "1.3.1",
-  "description": "Modern UI popup with streaming chat, per-site memory, presets, and page summarization. No host permissions required.",
+  "description": "Modern UI popup with streaming chat, presets, and page summarization. Minimal host permission for OpenAI API only.",
   "permissions": [
     "storage",
     "activeTab",
     "scripting",
     "contextMenus",
     "tabs"
+  ],
+  "host_permissions": [
+    "https://api.openai.com/*"
   ],
   "background": {
     "service_worker": "background.js"
@@ -23,8 +26,5 @@
     "32": "assets/icons/icon-32.png",
     "48": "assets/icons/icon-48.png",
     "128": "assets/icons/icon-128.png"
-  },
-  "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self'"
   }
 }
