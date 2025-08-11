@@ -1,0 +1,50 @@
+{
+  "manifest_version": 3,
+  "name": "Jberry GPT Sidebar",
+  "version": "1.2.0",
+  "description": "Streaming popup + inline resizable sidebar, site memory, presets, and copy helpers.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "contextMenus",
+    "tabs"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Jberry GPT Sidebar",
+    "default_popup": "popup.html"
+  },
+  "options_page": "options.html",
+  "icons": {
+    "128": "icon-128.png"
+  },
+  "commands": {
+    "toggle_inline_panel": {
+      "suggested_key": {
+        "default": "Alt+J",
+        "mac": "Alt+J"
+      },
+      "description": "Toggle Jberry-GPT inline panel"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}
