@@ -1,5 +1,5 @@
 
-# PRO ChatGPT Chrome Extension — v1.2
+# PRO ChatGPT Chrome Extension — v1.2.1
 
 New in this build
 - **Inline streaming sidebar panel** injected into any page (toggle with **Alt+J** or context menu “Ask in Jberry-GPT sidebar”). Streams tokens live, supports site memory, copy/copy-as-code, and “Insert Selection” / “Summarize Page” actions.
