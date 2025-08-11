@@ -9,7 +9,7 @@ async function getApiKey() {
   return OPENAI_API_KEY;
 }
 
-async function askOnce(prompt, model = "gpt-5.1-mini", system = "You are a helpful assistant.") {
+async function askOnce(prompt, model = "gpt-5-mini", system = "You are a helpful assistant.") {
   const key = await getApiKey();
   const r = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
@@ -75,7 +75,7 @@ chrome.runtime.onConnect.addListener((port) => {
       const res = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
         headers: { "Authorization": `Bearer ${key}`, "Content-Type": "application/json" },
-        body: JSON.stringify({ model: model || "gpt-5.1-mini", messages, stream: true })
+        body: JSON.stringify({ model: model || "gpt-5-mini", messages, stream: true })
       });
       if (!res.ok || !res.body) { port.postMessage({ type: "error", message: "HTTP " + res.status }); return; }
       const reader = res.body.getReader();

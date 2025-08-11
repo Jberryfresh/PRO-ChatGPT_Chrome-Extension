@@ -22,7 +22,7 @@ async function ensurePanel(){
   tools.appendChild(handle); tools.appendChild(close); header.appendChild(title); header.appendChild(tools); panel.appendChild(header);
   const controls=document.createElement("div");
   controls.style.cssText="display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px;border-bottom:1px solid "+(light?"#e6ecf2":"#1e2a36");
-  const model=document.createElement("select"); model.innerHTML=`<option value="gpt-5.1-mini">gpt-5.1-mini</option><option value="gpt-5.1">gpt-5.1</option>`;
+  const model=document.createElement("select"); model.innerHTML=`<option value="gpt-5-mini">gpt-5-mini</option><option value="gpt-5">gpt-5</option>`;
   model.style.cssText="border:1px solid "+(light?"#e6ecf2":"#1e2a36")+";background:"+ (light?"#f2f5f8":"#121b25")+";color:inherit;border-radius:10px;padding:6px";
   const memLbl=document.createElement("label"); memLbl.textContent="Memory"; memLbl.style.marginLeft="4px";
   const mem=document.createElement("input"); mem.type="checkbox"; mem.style.marginRight="6px"; memLbl.prepend(mem);
