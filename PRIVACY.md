@@ -8,7 +8,6 @@ PRO ChatGPT Chrome Extension runs locally in your browser. It does not use third
 ## Data We Store
 - **OpenAI API key** — stored via Chrome's `storage.sync` so you can use the extension on your signed‑in Chrome profiles.
 - **Prompt presets** — stored via `storage.sync`.
-- **Per‑site memory** — limited recent chat history per origin, stored via `storage.local` on your device. You can clear it anytime from the UI.
 
 ## Data We Send
 - **Prompts and selected/visible page text** — sent to OpenAI only when you explicitly ask a question or click “Summarize Page,” in order to generate a response.
